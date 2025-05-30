@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary-color: #0a2540; /* Dark Blue */
+            --secondary-color: #0077cc; /* Bright Blue */
+            --accent-color: #6772e5; /* Purple-ish Blue */
+            --background-color: #f6f9fc; /* Light Gray Blue */
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --navbar-height: 60px;
+            --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        /* Dark Mode Variables */
+        [data-theme="dark"] {
+            --primary-color: #1a1a1a;
+            --secondary-color: #0077cc;
+            --accent-color: #6772e5;
+            --background-color: #000000;
+            --text-color: #ffffff;
+            --card-bg: #1a1a1a;
+        }
+
+        body.dark-mode {
+            --primary-color: #181818;
+            --secondary-color: #232323;
+            --accent-color: #8a9afc;
+            --background-color: #181818;
+            --text-color: #f1f1f1;
+            --card-bg: #232323;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+        body.dark-mode, body.dark-mode .footer, body.dark-mode .navbar, body.dark-mode .mobile-menu {
+            background-color: #181818 !important;
+            color: #f1f1f1 !important;
+        }
+        body.dark-mode .video-card,
+        body.dark-mode .modal-content {
+            background-color: #232323 !important;
+            color: #f1f1f1 !important;
+        }
+        body.dark-mode .container {
+            background-color: #181818 !important;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-top: var(--navbar-height); /* Space for fixed navbar */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0 20px;
+            height: var(--navbar-height);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+        }
+
+        .navbar-logo svg {
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+        }
+
+        .navbar-logo span {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .navbar-search {
+            flex: 1;
+            max-width: 400px;
+            margin: 0 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.9em;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-input:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar-links a:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .navbar-user button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar-user button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .navbar-user .user-greeting {
+            margin-right: 15px;
+            font-weight: 500;
+        }
+
+        /* Main Content Area */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            font-size: 2em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            padding: 20px;
+            justify-content: center;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .video-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            max-width: 420px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            border-radius: 12px;
+        }
+
+        .yt-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 56px;
+            height: 56px;
+            background: rgba(0,0,0,0.65);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+        .yt-play-btn::before {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-left: 22px solid #fff;
+            border-top: 14px solid transparent;
+            border-bottom: 14px solid transparent;
+        }
+        .video-thumbnail::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 40px;
+            background: linear-gradient(to top, rgba(0,0,0,0.18), transparent);
+            border-radius: 0 0 12px 12px;
+            z-index: 1;
+        }
+
+        .video-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background-color: rgba(255,255,255,0.95);
+            border: 2.5px solid #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: box-shadow 0.2s, border-color 0.2s, background 0.2s;
+        }
+        body.dark-mode .action-btn {
+            background-color: rgba(30,30,30,0.92);
+            border: 2.5px solid rgba(0,0,0,0.7);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .action-btn.liked svg {
+            fill: var(--danger-color);
+        }
+
+        .action-btn.favorited svg {
+            fill: var(--warning-color);
+        }
+
+        .video-info {
+            padding: 15px;
+            flex-grow: 1; /* Make info take remaining space */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .video-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            /* Limit title to 2 lines with ellipsis */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 2.4em; /* Ensure space for 2 lines */
+        }
+
+        .video-description {
+            font-size: 0.85em;
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 12px;
+            /* Limit description to 3 lines with ellipsis */
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1; /* Allow description to take up available space */
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: auto;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 450px; /* Max width for login form */
+            position: relative;
+            color: var(--text-color);
+        }
+        
+        .modal-content-video {
+            max-width: 800px; /* Max width for video player */
+            padding: 15px;
+            position: relative;
+        }
+
+        .close-btn {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        /* Login Form Specifics */
+        #login-form h2 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+        #login-form button {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+        #login-form button:hover {
+            background-color: var(--accent-color);
+        }
+        #login-error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 10px;
+            text-align: center;
+            min-height: 1.2em; /* Reserve space */
+        }
+
+        /* Video Player Modal */
+        #youtube-player-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+        }
+        #youtube-player-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 600px) {
+            .navbar-search {
+                display: none;
+            }
+            .navbar-links {
+                display: none;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            .navbar-user {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 1.8em;
+            }
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+             .modal-content {
+                width: 95%;
+            }
+        }
+        @media (max-width: 480px) {
+            .navbar-logo span {
+                font-size: 1.2em;
+            }
+            .navbar-user button {
+                padding: 6px 10px;
+                font-size: 0.8em;
+            }
+             .video-grid {
+                grid-template-columns: 1fr; /* Single column on very small screens */
+            }
+            .video-title {
+                font-size: 1em;
+            }
+            .video-description {
+                font-size: 0.8em;
+            }
+        }
+        @media (max-width: 900px) {
+            .video-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .category-btn {
+            background: #4CAF50; /* Green */
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 18px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            outline: none;
+        }
+
+        .category-btn.active, .category-btn:hover {
+            background: #388E3C; /* Darker green */
+            color: #fff;
+        }
+
+        .navbar-lang {
+            display: flex;
+            gap: 8px;
+            margin-left: 18px;
+        }
+        .lang-btn {
+            background: #fff;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            padding: 4px 12px;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .lang-btn.active, .lang-btn:hover {
+            background: var(--accent-color);
+            color: #fff;
+        }
+
+        .modal-content-video .close-btn {
+            color: #fff;
+            /* background: rgba(0,0,0,0.7); */
+            background: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            z-index: 9999;
+            cursor: pointer;
+            box-shadow: none;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+            transition: color 0.2s, opacity 0.2s;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .modal-content-video:hover .close-btn {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content-video iframe {
+            pointer-events: auto;
+        }
+
+        body.dark-mode .action-btn svg {
+            fill: #fff !important;
+            opacity: 0.85;
+        }
+        body.dark-mode .action-btn.liked svg {
+            fill: #ff5252 !important;
+        }
+        body.dark-mode .action-btn.favorited svg {
+            fill: #ffd700 !important;
+        }
+
+        .darkmode-toggle {
+            background: #232323;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            margin-left: 12px;
+            padding: 0;
+        }
+        .darkmode-toggle:hover {
+            background: #444;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+        }
+        .darkmode-toggle svg {
+            width: 28px;
+            height: 28px;
+            display: block;
+            color: #fff;
+            fill: #fff;
+            transition: color 0.2s, fill 0.2s;
+        }
+        body.dark-mode .darkmode-toggle {
+            background: #fff;
+            color: #232323;
+        }
+        body.dark-mode .darkmode-toggle:hover {
+            background: #e0e0e0;
+        }
+        body.dark-mode .darkmode-toggle svg {
+            color: #232323;
+            fill: #232323;
+        }
+        body.dark-mode .darkmode-toggle {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="navbar-logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 13V6a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v7h2.382a2 2 0 0 1 1.789 1.106l1.618 3.236A1 1 0 0 1 21 18H20a2 2 0 1 1-4 0H8a2 2 0 1 1-4 0H3a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h1zm2 0h10V7H5v6zm12.618 2l-1.2-2.4A1 1 0 0 0 15.5 12H19a1 1 0 0 1 1 1v2h-2.382zM7 18a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm10 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0z"/>
+            </svg>
+            <span>NX</span>
+        </a>
+        <div class="navbar-search">
+            <input type="text" class="search-input" placeholder="Search videos...">
+        </div>
+        <div class="navbar-links">
+            <a href="#" data-page="home">Home</a>
+            <a href="#" data-page="history">History</a>
+            <a href="#" data-page="favorites">Favorites</a>
+        </div>
+        <div class="navbar-user">
+            <!-- User info or Login/Register button will be injected here by JS -->
+        </div>
+        <button class="darkmode-toggle" id="darkmode-toggle" title="Toggle dark mode">
+            <svg id="darkmode-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path id="sun-icon" d="M12 4.5V2m0 20v-2.5m7.07-7.07H22m-20 0h2.93m15.36 6.36l-1.77-1.77m-12.02 0l-1.77 1.77m15.36-12.02l-1.77 1.77m-12.02 0l-1.77-1.77M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"/>
+                <path id="moon-icon" style="display:none" d="M21 12.79A9 9 0 0 1 12.79 3a7 7 0 1 0 8.21 9.79z"/>
+            </svg>
+        </button>
+        <button class="mobile-menu-btn" id="mobile-menu-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="#" data-page="home">Home</a>
+        <a href="#" data-page="history">History</a>
+        <a href="#" data-page="favorites">Favorites</a>
+        <div id="mobile-auth-btn"></div>
+    </div>
+
+    <!-- Landing Page -->
+    <div id="landing-page" class="landing-page">
+        <div class="landing-content">
+            <h1 class="landing-title" id="landing-title">Welcome to NX Learning Hub</h1>
+            <p class="landing-description" id="landing-desc-1">Embrace AI to enhance efficiency, drive innovation, and lead in the fast-changing digital era. Adapt, automate, and succeed with smart technology.</p>
+            <p class="landing-description" id="landing-desc-2">AIを活用して効率を高め、革新を推進し、変化するデジタル時代をリードしましょう。適応・自動化し、スマート技術で成功へ導く</p>
+            <button class="start-learning-btn" id="start-learning-btn">Start Learning</button>
+        </div>
+    </div>
+
+    <!-- Home Page -->
+    <div id="home-page" class="page-container">
+        <div class="container">
+            <h1 class="page-title">Latest AI Learning</h1>
+            <div id="category-filter" class="category-filter"></div>
+            <div id="video-sort-filter" class="video-sort-filter"></div>
+            <div id="video-grid" class="video-grid"></div>
+            <hr style="margin: 32px 0 18px 0; border: none; border-top: 2px solid #b3c7f9;">
+            <div id="suggested-videos" class="suggested-videos"></div>
+        </div>
+    </div>
+
+    <!-- History Page -->
+    <div id="history-page" class="page-container">
+        <div class="container">
+            <h1 class="page-title">History</h1>
+            <div id="history-grid" class="video-grid">
+                <!-- History video cards will be injected here by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Favorites Page -->
+    <div id="favorites-page" class="page-container">
+        <div class="container">
+            <h1 class="page-title">Favorites</h1>
+            <div id="favorites-grid" class="video-grid">
+                <!-- Favorite video cards will be injected here by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-login-modal">×</span>
+            <form id="login-form">
+                <h2>Login</h2>
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit">Login</button>
+                <p id="login-error"></p>
+                <p>Don't have an account? <a href="#" id="open-register">Register</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-register-modal">×</span>
+            <form id="register-form">
+                <h2>Register</h2>
+                <div class="form-group">
+                    <label for="register-username">Username:</label>
+                    <input type="text" id="register-username" name="register-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password:</label>
+                    <input type="password" id="register-password" name="register-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-displayname">Display Name:</label>
+                    <input type="text" id="register-displayname" name="register-displayname" required>
+                </div>
+                <button type="submit">Register</button>
+                <p id="register-error"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div id="video-player-modal" class="modal">
+        <div class="modal-content modal-content-video">
+            <span class="close-btn" id="close-video-modal">×</span>
+            <div id="youtube-player-container">
+                <!-- YouTube iframe will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 id="footer-about-title">About Us</h3>
+                <p id="footer-about-desc">NX Learning Hub is the most comprehensive AI learning platform for business applications with easy-to-understand tutorials.</p>
+            </div>
+            <div class="footer-section">
+                <h3 id="footer-quick-title">Quick Links</h3>
+                <a href="#" data-page="home">Home</a>
+                <a href="#" data-page="history">History</a>
+                <a href="#" data-page="favorites">Favorites</a>
+            </div>
+            <div class="footer-section">
+                <h3 id="footer-contact-title">Contact Us</h3>
+                <p id="footer-email">Email: sakornonk@gmail.com</p>
+                <p id="footer-phone">Phone: 081-991-8769</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p id="footer-copyright">&copy; 2024 NX Learning Hub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <button id="top-to-home-btn" class="top-to-home-btn" title="Back to Top" style="display:none;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+    </button>
+
+    <script src="script.js"></script>
+    <script>
+      // Language switching logic placeholder
+      // See script.js for full implementation
+    </script>
+</body>
+</html>
